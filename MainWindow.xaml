@@ -1,0 +1,167 @@
+﻿<Window x:Class="LogicPad.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:LogicPad"
+        mc:Ignorable="d"
+        Title="LogicPad" Height="750" Width="1000"
+        FontFamily="Segoe UI" FontSize="14">
+    <Grid Margin="15">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Left Panel: Settings -->
+        <StackPanel Grid.Column="0" Margin="0,0,15,0" MinWidth="150">
+            <GroupBox Header="Mode" Padding="10">
+                <StackPanel>
+                    <RadioButton Content="QWORD (64-bit)" Tag="64" GroupName="DataSize" Checked="DataSize_Checked"/>
+                    <RadioButton Content="DWORD (32-bit)" Tag="32" GroupName="DataSize" Checked="DataSize_Checked"/>
+                    <RadioButton Content="WORD (16-bit)"  Tag="16" GroupName="DataSize" Checked="DataSize_Checked"/>
+                    <RadioButton Content="BYTE (8-bit)"  Tag="8"  GroupName="DataSize" Checked="DataSize_Checked" IsChecked="True"/>
+                </StackPanel>
+            </GroupBox>
+
+            <Button x:Name="ToggleTopmostButton" Content="Always On Top: Off" Margin="0,15,0,0" Click="ToggleTopmostButton_Click"/>
+
+            <GroupBox Header="Fixed-point Settings" Padding="10" Margin="0,15,0,0">
+                <StackPanel>
+                    <TextBlock Text="Fractional Bits (Q-format):" Margin="0,0,0,5"/>
+                    <TextBox x:Name="FixedPointFractionalBitsInput" Text="0" TextAlignment="Right" FontFamily="Consolas" FontSize="16" TextChanged="FixedPointFractionalBits_TextChanged"/>
+                </StackPanel>
+            </GroupBox>
+        </StackPanel>
+
+        <!-- Middle Panel: Display, Horizontal Bit Display and Buttons -->
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/> <!-- New row for expression display -->
+            </Grid.RowDefinitions>
+
+            <GroupBox Grid.Row="0" Header="Display" Padding="10">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <RadioButton Grid.Row="0" Grid.Column="0" Content="HEX" VerticalAlignment="Center" IsChecked="True" GroupName="Radix" Checked="Radix_Checked"/>
+                    <TextBox Grid.Row="0" Grid.Column="1" x:Name="HexDisplay" Text="0" Margin="10,2" TextAlignment="Right" FontFamily="Consolas" FontSize="16" TextChanged="Display_TextChanged"/>
+
+                    <RadioButton Grid.Row="1" Grid.Column="0" Content="DEC" VerticalAlignment="Center" GroupName="Radix" Checked="Radix_Checked"/>
+                    <TextBox Grid.Row="1" Grid.Column="1" x:Name="DecDisplay" Text="0" Margin="10,2" TextAlignment="Right" FontFamily="Consolas" FontSize="16" TextChanged="Display_TextChanged"/>
+
+                    <RadioButton Grid.Row="2" Grid.Column="0" Content="OCT" VerticalAlignment="Center" GroupName="Radix" Checked="Radix_Checked"/>
+                    <TextBox Grid.Row="2" Grid.Column="1" x:Name="OctDisplay" Text="0" Margin="10,2" TextAlignment="Right" FontFamily="Consolas" FontSize="16" TextChanged="Display_TextChanged"/>
+
+                    <RadioButton Grid.Row="3" Grid.Column="0" Content="BIN" VerticalAlignment="Center" GroupName="Radix" Checked="Radix_Checked"/>
+                    <TextBox Grid.Row="3" Grid.Column="1" x:Name="BinDisplay" Text="0" Margin="10,2" TextAlignment="Right" FontFamily="Consolas" FontSize="16" TextChanged="Display_TextChanged"/>
+
+                    <RadioButton Grid.Row="4" Grid.Column="0" Content="Fixed" VerticalAlignment="Center" GroupName="Radix" Checked="Radix_Checked"/>
+                    <TextBox Grid.Row="4" Grid.Column="1" x:Name="FixedDisplay" Text="0.0" Margin="10,2" TextAlignment="Right" FontFamily="Consolas" FontSize="16" TextChanged="Display_TextChanged"/>
+
+                    <RadioButton Grid.Row="5" Grid.Column="0" Content="Float" VerticalAlignment="Center" GroupName="Radix" Checked="Radix_Checked"/>
+                    <TextBox Grid.Row="5" Grid.Column="1" x:Name="FloatDisplay" Text="0.0" Margin="10,2" TextAlignment="Right" FontFamily="Consolas" FontSize="16" TextChanged="Display_TextChanged"/>
+                </Grid>
+            </GroupBox>
+
+            <GroupBox Grid.Row="1" Header="Horizontal Bit View" Padding="5" Margin="0,15,0,0">
+                <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
+                    <WrapPanel x:Name="HorizontalBitDisplayPanel" />
+                </ScrollViewer>
+            </GroupBox>
+
+            <!-- Buttons -->
+            <Grid Grid.Row="2" Margin="0,15,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <!-- Row 1 -->
+                <Button Grid.Row="0" Grid.Column="0" Content="Lsh" Margin="2" Click="Operator_Click"/>
+                <Button Grid.Row="0" Grid.Column="1" Content="Rsh" Margin="2" Click="Operator_Click"/>
+                <Button Grid.Row="0" Grid.Column="2" Content="Or" Margin="2" Click="Operator_Click"/>
+                <Button Grid.Row="0" Grid.Column="3" Content="Xor" Margin="2" Click="Operator_Click"/>
+                <Button Grid.Row="0" Grid.Column="4" Content="Not" Margin="2" Click="Not_Click"/>
+                <Button Grid.Row="0" Grid.Column="5" Content="And" Margin="2" Click="Operator_Click"/>
+
+                <!-- Row 2 -->
+                <Button Grid.Row="1" Grid.Column="0" Content="Mod" Margin="2" Click="Operator_Click"/>
+                <Button Grid.Row="1" Grid.Column="1" Content="CE" Margin="2" Click="ClearEntry_Click"/>
+                <Button Grid.Row="1" Grid.Column="2" Content="C" Margin="2" Click="Clear_Click"/>
+                <Button Grid.Row="1" Grid.Column="3" Content="←" Margin="2" Click="Backspace_Click" />
+                <Button Grid.Row="1" Grid.Column="5" Content="/" Margin="2" Click="Operator_Click"/>
+
+                <!-- Row 3 -->
+                <Button Grid.Row="2" Grid.Column="0" Content="A" Margin="2" Click="Number_Click"/>
+                <Button Grid.Row="2" Grid.Column="1" Content="B" Margin="2" Click="Number_Click"/>
+                <Button Grid.Row="2" Grid.Column="2" Content="7" Margin="2" Click="Number_Click"/>
+                <Button Grid.Row="2" Grid.Column="3" Content="8" Margin="2" Click="Number_Click"/>
+                <Button Grid.Row="2" Grid.Column="4" Content="9" Margin="2" Click="Number_Click"/>
+                <Button Grid.Row="2" Grid.Column="5" Content="*" Margin="2" Click="Operator_Click"/>
+
+                <!-- Row 4 -->
+                <Button Grid.Row="3" Grid.Column="0" Content="C" Margin="2" Click="Number_Click"/>
+                <Button Grid.Row="3" Grid.Column="1" Content="D" Margin="2" Click="Number_Click"/>
+                <Button Grid.Row="3" Grid.Column="2" Content="4" Margin="2" Click="Number_Click"/>
+                <Button Grid.Row="3" Grid.Column="3" Content="5" Margin="2" Click="Number_Click"/>
+                <Button Grid.Row="3" Grid.Column="4" Content="6" Margin="2" Click="Number_Click"/>
+                <Button Grid.Row="3" Grid.Column="5" Content="-" Margin="2" Click="Operator_Click"/>
+
+                <!-- Row 5 -->
+                <Button Grid.Row="4" Grid.Column="0" Content="E" Margin="2" Click="Number_Click"/>
+                <Button Grid.Row="4" Grid.Column="1" Content="F" Margin="2" Click="Number_Click"/>
+                <Button Grid.Row="4" Grid.Column="2" Content="1" Margin="2" Click="Number_Click"/>
+                <Button Grid.Row="4" Grid.Column="3" Content="2" Margin="2" Click="Number_Click"/>
+                <Button Grid.Row="4" Grid.Column="4" Content="3" Margin="2" Click="Number_Click"/>
+                <Button Grid.Row="4" Grid.Column="5" Content="+" Margin="2" Click="Operator_Click"/>
+
+                <!-- Row 6 -->
+                <Button Grid.Row="5" Grid.Column="2" Content="0" Grid.ColumnSpan="2" Margin="2" Click="Number_Click"/>
+                <Button Grid.Row="5" Grid.Column="4" Content="." Margin="2" IsEnabled="False"/>
+                <Button Grid.Row="5" Grid.Column="5" Content="=" Margin="2" Click="Equals_Click"/>
+            </Grid>
+
+            <GroupBox Grid.Row="3" Header="Calculation Expression" Padding="10" Margin="0,15,0,0">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <TextBlock x:Name="ExpressionTextBlock" TextWrapping="Wrap" FontSize="16" FontFamily="Consolas"/>
+                </ScrollViewer>
+            </GroupBox>
+        </Grid>
+
+        <!-- Right Panel: Vertical Bit Display -->
+        <GroupBox Grid.Column="2" Header="Vertical Bit View" Padding="5" MinWidth="150">
+            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                <StackPanel x:Name="VerticalBitDisplayPanel" />
+            </ScrollViewer>
+        </GroupBox>
+    </Grid>
+</Window>
+
